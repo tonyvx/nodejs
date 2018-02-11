@@ -1,4 +1,5 @@
 // grab the packages we need
+var config = require('./config.json');
 var express = require('express');
 var util = require('util');
 var app = express();
@@ -15,6 +16,7 @@ var MongoClient = require('mongodb').MongoClient;
 // start the server
 app.listen(port);
 console.log('Server started! At http://localhost:' + port);
+console.log('Using mongo db ' + "mongodb://"+config.mongo.host+":"+config.mongo.port);
 
 function time(){
 	return dateFormat(new Date(), "isoDateTime");
@@ -41,7 +43,7 @@ app.get('/api/users', function(req, res) {
 //list databases
 app.get('/api/databases', function(req, res) {	
 	console.log(time() + " : list databases " + util.inspect( req.params ) );
-	MongoClient.connect("mongodb://localhost:27017", function (err, client){
+	MongoClient.connect("mongodb://"+config.mongo.host+":"+config.mongo.port, function (err, client){
 	    if(err) throw err;
 	    var db = client.db('carrier-data');
 	    db.admin().listDatabases(function(err, dbs) {
@@ -54,7 +56,7 @@ app.get('/api/databases', function(req, res) {
 app.get('/api/databases/:db', function(req, res) {
 	console.log(time() + " : list collections " + util.inspect( req.params ) );
 	var db_name = req.params.db;
-	MongoClient.connect("mongodb://localhost:27017", function (err, client){
+	MongoClient.connect("mongodb://"+config.mongo.host+":"+config.mongo.port, function (err, client){
 	    if(err) throw err;
 		var db = client.db(db_name);
 	    db.collections(function(err, collections){
@@ -74,8 +76,7 @@ app.get('/api/databases/:db/:col', function(req, res) {
 	console.log(time() + " : view collection " + util.inspect( req.params ) );
 	var db_name = req.params.db;
 	var col_name = req.params.col;
-	
-	MongoClient.connect("mongodb://localhost:27017", function (err, client){
+	MongoClient.connect("mongodb://"+config.mongo.host+":"+config.mongo.port, function (err, client){
 	    if(err) throw err;
 		var db = client.db(db_name);
 	    db.collection(col_name, function (err, collection) {
@@ -95,7 +96,7 @@ app.get('/api/databases/:db/:col/count', function(req, res) {
 	console.log(time() + " : count records " + util.inspect( req.params ) );
 	var db_name = req.params.db;
 	var col_name = req.params.col;
-	MongoClient.connect("mongodb://localhost:27017", function (err, client){
+	MongoClient.connect("mongodb://"+config.mongo.host+":"+config.mongo.port, function (err, client){
 	    if(err) throw err;
 		var db = client.db(db_name);
 	    db.collection(col_name).count(function (err, count) {
@@ -113,7 +114,7 @@ app.get('/api/databases/:db/:col/:qry', function(req, res) {
 	var col_name = req.params.col;
 	var query = req.params.qry;
 	query = JSON.parse(query);
-	MongoClient.connect("mongodb://localhost:27017", function (err, client){
+	MongoClient.connect("mongodb://"+config.mongo.host+":"+config.mongo.port, function (err, client){
 	    if(err) throw err;
 		var db = client.db(db_name);
 	    db.collection(col_name, function (err, collection) {
@@ -133,7 +134,7 @@ app.post('/postapi/databases/:db/:col', function(req, res) {
 	//req.params.id;
 	var data = req.body;
 	var updateValue = { $set : { _id : id , goals : data.goals }};
-	MongoClient.connect("mongodb://localhost:27017", function (err, client){
+	MongoClient.connect("mongodb://"+config.mongo.host+":"+config.mongo.port, function (err, client){
 	    if(err) throw err;
 		var db = client.db(db_name);
 	    db.collection(col_name, function (err, collection) {
