@@ -9,5 +9,8 @@
     "bson": "*",
     "dateformat": "*",
     "body-parser": "*"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }
