@@ -3,7 +3,7 @@ var config = require('./config.json');
 var express = require('express');
 var util = require('util');
 var app = express();
-var port = process.env.PORT || 8081;
+var port = process.env.PORT || 8082;
 var dateFormat = require('dateformat');
 var bodyParser = require('body-parser');
 
