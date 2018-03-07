@@ -2,15 +2,16 @@ version: "2"
 services:
   app:
     container_name: app
+    image: tonyvx/docker_nodejs
     restart: always
     build: .
     ports:
-      - "8081:8081"
+      - "8081:8082"
     links:
       - "mongo:mongodb"
   mongo:
-    container_name: mongo
-    image: mongo
+    container_name: docker_mongo
+    image: tonyvx/docker_mongo
     volumes:
       - ./data:/data/db
     ports:
